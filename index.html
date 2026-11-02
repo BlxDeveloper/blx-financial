@@ -1,315 +1,154 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#081521">
-<title>BLX Financial | Malaysian Equity Intelligence</title>
-<meta name="description" content="Institutional-grade financial research and intelligence for Bursa Malaysia investors.">
-
-<style>
-:root {
-  --bg: #081521;
-  --panel: #101f2d;
-  --panel2: #142637;
-  --green: #00c58a;
-  --green-soft: #123e37;
-  --text: #edf4f7;
-  --muted: #91a4b3;
-  --border: #233746;
-  --white: #ffffff;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-}
-a { color: inherit; text-decoration: none; }
-.container { width: min(1160px, 92%); margin: auto; }
-header {
-  border-bottom: 1px solid var(--border);
-  background: rgba(8,21,33,.96);
-  position: sticky; top: 0; z-index: 10;
-}
-.nav {
-  height: 76px; display: flex; align-items: center;
-  justify-content: space-between; gap: 20px;
-}
-.logo { display: flex; align-items: center; gap: 11px; }
-.logo-mark {
-  width: 39px; height: 39px; border-radius: 11px;
-  background: var(--green); color: #062019;
-  display: grid; place-items: center; font-weight: 900;
-  font-size: 18px;
-}
-.logo-name { font-size: 19px; font-weight: 800; letter-spacing: -.6px; }
-.logo-name span { color: var(--green); }
-.nav-links { display: flex; gap: 28px; color: var(--muted); font-size: 13px; }
-.nav-links a:hover { color: var(--green); }
-.nav-button {
-  border: 1px solid var(--border); padding: 9px 15px;
-  border-radius: 7px; font-size: 12px; color: var(--green);
-}
-.hero { padding: 83px 0 65px; }
-.eyebrow {
-  display: inline-flex; gap: 9px; align-items: center;
-  color: var(--green); font-size: 11px; font-weight: 700;
-  letter-spacing: 1.8px; text-transform: uppercase;
-}
-.dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; }
-h1 {
-  font-size: clamp(39px, 6vw, 67px);
-  line-height: 1.08; letter-spacing: -2.5px;
-  max-width: 790px; margin: 22px 0;
-}
-h1 span { color: var(--green); }
-.hero-copy { color: var(--muted); max-width: 610px; font-size: 16px; }
-.search-box {
-  margin-top: 32px; display: flex; max-width: 590px;
-  background: var(--panel); border: 1px solid var(--border);
-  padding: 7px; border-radius: 10px;
-}
-.search-box input {
-  flex: 1; min-width: 0; border: 0; outline: 0;
-  background: transparent; color: var(--text);
-  padding: 12px; font-size: 14px;
-}
-.search-box button, .primary {
-  background: var(--green); color: #062019;
-  border: 0; border-radius: 7px; padding: 12px 20px;
-  font-weight: 800; cursor: pointer;
-}
-.search-box button:hover, .primary:hover { background: #39e0ad; }
-.search-hint { color: var(--muted); font-size: 11px; margin-top: 12px; }
-.section { padding: 48px 0; border-top: 1px solid var(--border); }
-.section-heading {
-  display: flex; align-items: end; justify-content: space-between;
-  gap: 20px; margin-bottom: 23px;
-}
-.section-heading h2 { font-size: 23px; letter-spacing: -.6px; }
-.section-heading p { color: var(--muted); font-size: 12px; margin-top: 4px; }
-.section-label { color: var(--green); font-size: 10px; letter-spacing: 1.5px; font-weight: 800; }
-.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-.card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 11px; padding: 21px;
-}
-.card:hover { border-color: #287e67; transform: translateY(-2px); transition: .2s; }
-.card-top { display: flex; justify-content: space-between; align-items: center; }
-.stock-code { color: var(--green); font-size: 11px; font-weight: 800; }
-.tag {
-  background: var(--green-soft); color: var(--green);
-  font-size: 9px; padding: 4px 8px; border-radius: 5px;
-}
-.card h3 { font-size: 16px; margin: 17px 0 4px; }
-.card p { color: var(--muted); font-size: 12px; }
-.card-bottom {
-  border-top: 1px solid var(--border); margin-top: 19px;
-  padding-top: 13px; display: flex; justify-content: space-between;
-  color: var(--muted); font-size: 11px;
-}
-.status { color: var(--green); }
-.feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 15px; }
-.feature { padding: 23px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; }
-.feature-icon {
-  width: 38px; height: 38px; border-radius: 9px;
-  background: var(--green-soft); color: var(--green);
-  display: grid; place-items: center; font-size: 19px; margin-bottom: 18px;
-}
-.feature h3 { font-size: 15px; margin-bottom: 7px; }
-.feature p { color: var(--muted); font-size: 12px; }
-.notice {
-  margin-top: 20px; padding: 14px 17px;
-  background: #102b2a; border: 1px solid #205448;
-  color: #a9d8c9; border-radius: 8px; font-size: 11px;
-}
-footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: 11px; }
-.footer-inner { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
-.empty { color: var(--muted); font-size: 13px; padding: 20px 0; display: none; }
-@media(max-width:760px) {
-  .nav-links { display: none; }
-  .hero { padding: 60px 0 45px; }
-  .grid, .feature-grid { grid-template-columns: 1fr; }
-  .section-heading { align-items: start; flex-direction: column; }
-  h1 { letter-spacing: -1.5px; }
-}
-@media(prefers-reduced-motion:reduce) {
-  * { transition: none !important; }
-}
-</style>
-</head>
-
-<body>
-<header>
-  <div class="container nav">
-    <a class="logo" href="#">
-      <div class="logo-mark">B</div>
-      <div class="logo-name">BLX <span>FINANCIAL</span></div>
-    </a>
-    <nav class="nav-links">
-      <a href="#companies">Companies</a>
-      <a href="#research">Research</a>
-      <a href="#about">About BLX</a>
-    </nav>
-    <a class="nav-button" href="#companies">Explore Market ↗</a>
-  </div>
-</header>
-
-<main>
-<section class="hero">
-  <div class="container">
-    <div class="eyebrow"><span class="dot"></span> Malaysian Equity Intelligence</div>
-    <h1>See beyond the market.<br><span>Understand the numbers.</span></h1>
-    <p class="hero-copy">
-      A financial intelligence platform focused on Bursa Malaysia.
-      Explore company fundamentals, financial statements and research
-      built around traceable financial data.
-    </p>
-
-    <form class="search-box" id="companySearch">
-      <input id="searchInput" type="search"
-        placeholder="Search company name or stock code..." aria-label="Search companies">
-      <button type="submit">Search ↗</button>
-    </form>
-    <p class="search-hint">Explore Malaysian listed companies and their financial information.</p>
-  </div>
-</section>
-
-<section class="section" id="companies">
-  <div class="container">
-    <div class="section-heading">
-      <div>
-        <div class="section-label">RESEARCH UNIVERSE</div>
-        <h2>Companies on our radar</h2>
-        <p>Initial BLX company coverage.</p>
-      </div>
-      <span class="section-label">BURSA MALAYSIA</span>
-    </div>
-
-    <div class="grid" id="companyGrid">
-      <a class="card company" href="#research" data-search="1155 maybank malayan banking">
-        <div class="card-top"><span class="stock-code">1155 · MAIN</span><span class="tag">BANKING</span></div>
-        <h3>Malayan Banking Berhad</h3>
-        <p>Financial Services</p>
-        <div class="card-bottom"><span>Research coverage</span><span class="status">Available</span></div>
-      </a>
-
-      <a class="card company" href="#research" data-search="5347 tenaga nasional tnb">
-        <div class="card-top"><span class="stock-code">5347 · MAIN</span><span class="tag">UTILITIES</span></div>
-        <h3>Tenaga Nasional Berhad</h3>
-        <p>Electricity and Power</p>
-        <div class="card-bottom"><span>Research coverage</span><span class="status">Available</span></div>
-      </a>
-
-      <a class="card company" href="#research" data-search="5225 ihh healthcare">
-        <div class="card-top"><span class="stock-code">5225 · MAIN</span><span class="tag">HEALTHCARE</span></div>
-        <h3>IHH Healthcare Berhad</h3>
-        <p>Healthcare Services</p>
-        <div class="card-bottom"><span>Company profile</span><span class="status">Listed</span></div>
-      </a>
-
-      <a class="card company" href="#research" data-search="8869 press metal aluminium">
-        <div class="card-top"><span class="stock-code">8869 · MAIN</span><span class="tag">INDUSTRIAL</span></div>
-        <h3>Press Metal Aluminium Holdings</h3>
-        <p>Aluminium Manufacturing</p>
-        <div class="card-bottom"><span>Company profile</span><span class="status">Listed</span></div>
-      </a>
-
-      <a class="card company" href="#research" data-search="5398 gamuda">
-        <div class="card-top"><span class="stock-code">5398 · MAIN</span><span class="tag">CONSTRUCTION</span></div>
-        <h3>Gamuda Berhad</h3>
-        <p>Engineering and Construction</p>
-        <div class="card-bottom"><span>Company profile</span><span class="status">Listed</span></div>
-      </a>
-    </div>
-    <p class="empty" id="emptyMessage">No matching company found. Try another name or stock code.</p>
-  </div>
-</section>
-
-<section class="section" id="research">
-  <div class="container">
-    <div class="section-heading">
-      <div>
-        <div class="section-label">THE BLX APPROACH</div>
-        <h2>Research built on financial evidence</h2>
-        <p>Designed to make company fundamentals easier to understand.</p>
-      </div>
-    </div>
-    <div class="feature-grid">
-      <div class="feature">
-        <div class="feature-icon">▤</div>
-        <h3>Financial Statements</h3>
-        <p>Explore income statements, balance sheets and cash flow information.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">◈</div>
-        <h3>Financial Ratios</h3>
-        <p>Understand profitability, returns and financial performance through calculated ratios.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">⌕</div>
-        <h3>Source Traceability</h3>
-        <p>Connect financial figures to their source reports and page references.</p>
-      </div>
-    </div>
-    <div class="notice">
-      BLX Financial is currently under development. Company information and coverage
-      shown here are introductory; live market prices and public financial dashboards
-      have not yet been connected.
-    </div>
-  </div>
-</section>
-
-<section class="section" id="about">
-  <div class="container">
-    <div class="section-label">ABOUT BLX FINANCIAL</div>
-    <h2 style="font-size:26px;margin-top:10px;">Clarity through financial intelligence.</h2>
-    <p class="hero-copy" style="margin-top:12px;">
-      Our mission is to make Bursa Malaysia company research more structured,
-      transparent and accessible through reliable financial information.
-    </p>
-  </div>
-</section>
-</main>
-
-<footer>
-  <div class="container footer-inner">
-    <span>© 2026 BLX Financial. All rights reserved.</span>
-    <span>Malaysian Equity Research & Financial Intelligence</span>
-  </div>
-</footer>
-
 <script>
+const SUPABASE_URL = "https://yjlrhjsllyitlcuqkaik.supabase.co";
+const SUPABASE_KEY = "sb_publishable_uPqbAnmLLdDSeFOq1z6X9g_MHHBqeYC";
+
+const companyGrid = document.getElementById("companyGrid");
 const searchForm = document.getElementById("companySearch");
 const searchInput = document.getElementById("searchInput");
-const companies = document.querySelectorAll(".company");
 const emptyMessage = document.getElementById("emptyMessage");
+
+let allCompanies = [];
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[character]);
+}
+
+function renderCompanies(companies) {
+  companyGrid.innerHTML = "";
+
+  if (companies.length === 0) {
+    emptyMessage.style.display = "block";
+    return;
+  }
+
+  emptyMessage.style.display = "none";
+
+  companies.forEach(company => {
+    const card = document.createElement("a");
+    card.className = "card company";
+
+    card.href = `company.html?code=${encodeURIComponent(company.stock_code)}`;
+
+    const searchable = [
+      company.stock_code,
+      company.name,
+      company.sector,
+      company.industry,
+      company.market
+    ].join(" ").toLowerCase();
+
+    card.dataset.search = searchable;
+
+    card.innerHTML = `
+      <div class="card-top">
+        <span class="stock-code">
+          ${escapeHTML(company.stock_code)} · ${escapeHTML(company.market)}
+        </span>
+        <span class="tag">
+          ${escapeHTML(company.sector || "COMPANY")}
+        </span>
+      </div>
+
+      <h3>${escapeHTML(company.name)}</h3>
+
+      <p>${escapeHTML(company.industry || company.sector || "Bursa Malaysia")}</p>
+
+      <div class="card-bottom">
+        <span>Research coverage</span>
+        <span class="status">Available</span>
+      </div>
+    `;
+
+    companyGrid.appendChild(card);
+  });
+}
+
+async function loadCompanies() {
+  companyGrid.innerHTML = `
+    <p style="color:#91a4b3;padding:20px;">
+      Loading companies from BLX database...
+    </p>
+  `;
+
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/companies?select=id,stock_code,name,market,sector,industry&is_active=eq.true&order=stock_code.asc`,
+      {
+        method: "GET",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(error);
+    }
+
+    allCompanies = await response.json();
+
+    renderCompanies(allCompanies);
+
+  } catch (error) {
+    console.error("BLX Supabase connection error:", error);
+
+    companyGrid.innerHTML = `
+      <p style="color:#f87171;padding:20px;">
+        Unable to load companies. Please check the Supabase connection and RLS policies.
+      </p>
+    `;
+  }
+}
 
 searchForm.addEventListener("submit", function(event) {
   event.preventDefault();
-  const query = searchInput.value.trim().toLowerCase();
-  let visible = 0;
 
-  companies.forEach(function(company) {
-    const matches = company.dataset.search.includes(query);
-    company.style.display = matches ? "" : "none";
-    if (matches) visible++;
+  const query = searchInput.value.trim().toLowerCase();
+
+  const filteredCompanies = allCompanies.filter(company => {
+    const searchable = [
+      company.stock_code,
+      company.name,
+      company.sector,
+      company.industry,
+      company.market
+    ].join(" ").toLowerCase();
+
+    return searchable.includes(query);
   });
 
-  emptyMessage.style.display = visible ? "none" : "block";
-  document.getElementById("companies").scrollIntoView({ behavior: "smooth" });
+  renderCompanies(filteredCompanies);
+
+  document.getElementById("companies").scrollIntoView({
+    behavior: "smooth"
+  });
 });
 
 searchInput.addEventListener("input", function() {
-  if (!searchInput.value.trim()) {
-    companies.forEach(company => company.style.display = "");
-    emptyMessage.style.display = "none";
-  }
-});
-</script>
-</body>
-</html>
+  const query = searchInput.value.trim().toLowerCase();
 
+  const filteredCompanies = allCompanies.filter(company => {
+    const searchable = [
+      company.stock_code,
+      company.name,
+      company.sector,
+      company.industry,
+      company.market
+    ].join(" ").toLowerCase();
+
+    return searchable.includes(query);
+  });
+
+  renderCompanies(filteredCompanies);
+});
+
+loadCompanies();
+</script>
