@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="BLX Financial company research profile for Malayan Banking Berhad (Maybank), Bursa Malaysia 1155.">
-  <title>Maybank (1155) | BLX Financial</title>
+  <meta name="description" content="BLX Financial company research profile for Bursa Malaysia-listed companies.">
+  <title>Company Research | BLX Financial</title>
 
   <style>
     :root {
@@ -424,11 +423,7 @@
 
   <main class="container">
 
-    <div class="breadcrumb">
-      <a href="index.html">Home</a>
-      / Companies
-      / Maybank
-    </div>
+    <div class="breadcrumb" id="breadcrumb"><a href="index.html">Home</a> / Companies / <span id="breadcrumbCompany">Loading company...</span></div>
 
     <!-- COMPANY HEADING -->
 
@@ -436,25 +431,21 @@
       <div>
         <div class="eyebrow">BURSA MALAYSIA EQUITY RESEARCH</div>
 
-        <h1>Malayan Banking Berhad</h1>
+        <h1 id="companyName">Loading company...</h1>
 
-        <div class="company-subtitle">
-          Maybank · Stock Code 1155 · Financial Services
-        </div>
+        <div class="company-subtitle" id="companySubtitle">Loading company information...</div>
       </div>
 
-      <div class="status">
+      <div class="status" id="connectionStatus">
         <span class="status-dot"></span>
-        Research Profile
+        Connecting to BLX database
       </div>
     </section>
 
-    <div class="notice">
+    <div class="notice" id="dataNotice">
       <strong>Data status:</strong>
-      This company profile is under development.
-      Financial figures and valuation metrics will only be displayed
-      after verification against official company disclosures.
-      Live market data is not connected.
+      Company profile and published financial records are retrieved from BLX Financial's database.
+      Unpublished records and live market prices are not displayed.
     </div>
 
     <!-- KEY METRICS -->
@@ -463,25 +454,25 @@
 
       <div class="metric-card">
         <div class="metric-label">Share Price</div>
-        <div class="metric-value">—</div>
+        <div class="metric-value" data-metric="share-price">—</div>
         <div class="metric-note">Live data not connected</div>
       </div>
 
       <div class="metric-card">
         <div class="metric-label">Market Capitalisation</div>
-        <div class="metric-value">—</div>
+        <div class="metric-value" data-metric="market-cap">—</div>
         <div class="metric-note">Awaiting verified data</div>
       </div>
 
       <div class="metric-card">
         <div class="metric-label">Revenue</div>
-        <div class="metric-value">—</div>
+        <div class="metric-value" data-metric="revenue">—</div>
         <div class="metric-note">Latest period pending</div>
       </div>
 
       <div class="metric-card">
         <div class="metric-label">Net Profit</div>
-        <div class="metric-value">—</div>
+        <div class="metric-value" data-metric="net-profit">—</div>
         <div class="metric-note">Latest period pending</div>
       </div>
 
@@ -513,32 +504,32 @@
 
           <div class="profile-item">
             <span>Company Name</span>
-            <strong>Malayan Banking Berhad</strong>
+            <strong id="profileName">—</strong>
           </div>
 
           <div class="profile-item">
-            <span>Brand Name</span>
-            <strong>Maybank</strong>
+            <span>Stock Code</span>
+            <strong id="profileCode">—</strong>
           </div>
 
           <div class="profile-item">
-            <span>Bursa Malaysia Code</span>
-            <strong>1155</strong>
+            <span>Market</span>
+            <strong id="profileMarket">—</strong>
           </div>
 
           <div class="profile-item">
             <span>Industry</span>
-            <strong>Financial Services</strong>
+            <strong id="profileIndustry">—</strong>
           </div>
 
           <div class="profile-item">
             <span>Sector</span>
-            <strong>Banking</strong>
+            <strong id="profileSector">—</strong>
           </div>
 
           <div class="profile-item">
             <span>Research Coverage</span>
-            <strong>Initial Profile</strong>
+            <strong id="profileCoverage">Published database records</strong>
           </div>
 
         </div>
@@ -568,7 +559,7 @@
               </tr>
             </thead>
 
-            <tbody>
+            <tbody id="annualFinancialRows">
               <tr>
                 <td>Revenue</td>
                 <td>—</td><td>—</td><td>—</td><td>—</td>
@@ -620,7 +611,7 @@
               </tr>
             </thead>
 
-            <tbody>
+            <tbody id="quarterlyFinancialRows">
               <tr>
                 <td>Revenue</td>
                 <td>—</td><td>—</td><td>—</td><td>—</td>
@@ -662,7 +653,7 @@
               </tr>
             </thead>
 
-            <tbody>
+            <tbody id="ratioRows">
               <tr>
                 <td>Return on Equity (ROE)</td>
                 <td>—</td><td>—</td>
@@ -719,7 +710,7 @@
               </tr>
             </thead>
 
-            <tbody>
+            <tbody id="valuationRows">
               <tr>
                 <td>Price-to-Earnings (P/E)</td>
                 <td>—</td>
@@ -794,8 +785,9 @@
       </div>
 
       <div class="panel">
-        <p>Official annual reports, quarterly reports and company announcements will be stored here.</p>
-        <p>No source documents have been added yet.</p>
+        <div class="research-list" id="documentList">
+          <p>Loading published source documents...</p>
+        </div>
       </div>
 
     </section>
@@ -811,6 +803,322 @@
     </div>
   </footer>
 
+
+<script>
+(() => {
+  "use strict";
+
+  const SUPABASE_URL = "https://yjlrhjsllyitlcuqkaik.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_uPqbAnmLLdDSeFOq1z6X9g_MHHBqeYC";
+
+  const params = new URLSearchParams(window.location.search);
+  const stockCode = (params.get("code") || "").trim();
+
+  const $ = (selector) => document.querySelector(selector);
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[character]);
+  }
+
+  function setStatus(message) {
+    const status = $("#connectionStatus");
+    if (status) {
+      status.innerHTML = '<span class="status-dot"></span>' + escapeHTML(message);
+    }
+  }
+
+  function formatValue(value, unit, currency) {
+    if (value === null || value === undefined || value === "") return "—";
+    const number = Number(value);
+    if (!Number.isFinite(number)) return escapeHTML(value);
+
+    const formatted = number.toLocaleString("en-MY", {
+      maximumFractionDigits: 2
+    });
+
+    if (unit === "PERCENT") return formatted + "%";
+    if (unit === "TIMES") return formatted + "x";
+    if (unit === "DAYS") return formatted + " days";
+    if (unit === "MYR") return "RM " + formatted;
+    if (currency === "MYR") return "RM " + formatted;
+    return formatted;
+  }
+
+  async function getRows(table, query) {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/${table}?${query}`,
+      {
+        method: "GET",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      const details = await response.text();
+      throw new Error(`${table}: HTTP ${response.status} — ${details}`);
+    }
+
+    return response.json();
+  }
+
+  function setProfile(company) {
+    $("#companyName").textContent = company.name || "Company";
+    $("#companySubtitle").textContent = [
+      company.stock_code,
+      company.market,
+      company.sector,
+      company.industry
+    ].filter(Boolean).join(" · ");
+
+    $("#breadcrumbCompany").textContent = company.name || company.stock_code;
+    document.title = `${company.name} (${company.stock_code}) | BLX Financial`;
+
+    $("#profileName").textContent = company.name || "—";
+    $("#profileCode").textContent = company.stock_code || "—";
+    $("#profileMarket").textContent = company.market || "—";
+    $("#profileIndustry").textContent = company.industry || "—";
+    $("#profileSector").textContent = company.sector || "—";
+    $("#profileCoverage").textContent = "Company record available";
+  }
+
+  function getPeriodLabel(period) {
+    if (period.period_code) return period.period_code;
+    if (period.period_type === "QUARTERLY" && period.quarter_number) {
+      return `Q${period.quarter_number} ${period.fiscal_year}`;
+    }
+    return `FY${period.fiscal_year}`;
+  }
+
+  function renderFinancialTable(targetId, periods, statements) {
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    const columns = periods.slice(0, 4);
+    if (!columns.length) {
+      target.innerHTML = '<tr><td colspan="5" class="empty-value">No published financial periods available.</td></tr>';
+      return;
+    }
+
+    const relevant = statements.filter(row =>
+      columns.some(period => period.id === row.period_id)
+    );
+
+    const metricNames = [...new Set(relevant.map(row => row.metric_name || row.metric_code))];
+    if (!metricNames.length) {
+      target.innerHTML = '<tr><td colspan="5" class="empty-value">No published financial statement figures available for these periods.</td></tr>';
+      return;
+    }
+
+    target.innerHTML = metricNames.map(name => {
+      const cells = columns.map(period => {
+        const record = relevant.find(row =>
+          row.period_id === period.id &&
+          (row.metric_name || row.metric_code) === name
+        );
+        return `<td>${record ? escapeHTML(formatValue(record.value, null, record.currency_code)) : "—"}</td>`;
+      }).join("");
+
+      return `<tr><td>${escapeHTML(name)}</td>${cells}</tr>`;
+    }).join("");
+
+    const header = target.closest("table").querySelector("thead tr");
+    if (header) {
+      header.innerHTML =
+        "<th>Financial Metric</th>" +
+        columns.map(period => `<th>${escapeHTML(getPeriodLabel(period))}</th>`).join("");
+    }
+  }
+
+  function renderRatios(ratios) {
+    const ratioTarget = $("#ratioRows");
+    const valuationTarget = $("#valuationRows");
+
+    const valuationTerms = ["price-to-earnings", "p/e", "price-to-book", "p/b", "dividend yield", "earnings per share", "eps", "book value per share"];
+
+    const sorted = [...ratios].sort((a, b) =>
+      String(b.ratio_code).localeCompare(String(a.ratio_code))
+    );
+
+    const isValuation = ratio => {
+      const text = `${ratio.ratio_code || ""} ${ratio.ratio_name || ""}`.toLowerCase();
+      return valuationTerms.some(term => text.includes(term));
+    };
+
+    const valuation = sorted.filter(isValuation);
+    const financial = sorted.filter(ratio => !isValuation(ratio));
+
+    function rows(items, valuationMode) {
+      if (!items.length) {
+        return `<tr><td colspan="${valuationMode ? 2 : 3}" class="empty-value">No published ${valuationMode ? "valuation" : "financial ratio"} records available.</td></tr>`;
+      }
+
+      return items.map(ratio => {
+        const value = formatValue(ratio.ratio_value, ratio.unit);
+        return valuationMode
+          ? `<tr><td>${escapeHTML(ratio.ratio_name || ratio.ratio_code)}</td><td>${escapeHTML(value)}</td></tr>`
+          : `<tr><td>${escapeHTML(ratio.ratio_name || ratio.ratio_code)}</td><td>${escapeHTML(value)}</td><td>${escapeHTML(ratio.calculation_status || "PUBLISHED")}</td></tr>`;
+      }).join("");
+    }
+
+    ratioTarget.innerHTML = rows(financial, false);
+    valuationTarget.innerHTML = rows(valuation, true);
+  }
+
+  function renderDocuments(reports) {
+    const target = $("#documentList");
+    if (!reports.length) {
+      target.innerHTML = "<p>No published reports are available for this company yet.</p>";
+      return;
+    }
+
+    target.innerHTML = reports.map(report => {
+      const label = `${report.report_type || "REPORT"} ${report.fiscal_year || ""}`.trim();
+      const date = report.publication_date
+        ? new Date(report.publication_date + "T00:00:00").toLocaleDateString("en-MY")
+        : "Publication date unavailable";
+      const title = report.file_name || label;
+      const link = report.source_url
+        ? `<a href="${escapeHTML(report.source_url)}" target="_blank" rel="noopener noreferrer" style="color:var(--primary)">Open source document ↗</a>`
+        : '<span class="section-label">No public source link supplied</span>';
+
+      return `<div class="research-item">
+        <strong>${escapeHTML(title)}</strong>
+        <p>${escapeHTML(label)} · ${escapeHTML(date)}</p>
+        <p>${link}</p>
+      </div>`;
+    }).join("");
+  }
+
+  function updateHeadlineMetrics(statements, periods) {
+    const latestAnnual = periods.find(period => period.period_type === "ANNUAL");
+    if (!latestAnnual) return;
+
+    const latestRows = statements.filter(row => row.period_id === latestAnnual.id);
+    const findMetric = terms => latestRows.find(row => {
+      const name = `${row.metric_name || ""} ${row.metric_code || ""}`.toLowerCase();
+      return terms.some(term => name.includes(term));
+    });
+
+    const revenue = findMetric(["revenue", "operating income"]);
+    const profit = findMetric(["net profit", "profit after tax", "profit for the period"]);
+
+    if (revenue) {
+      $('[data-metric="revenue"]').textContent =
+        formatValue(revenue.value, null, revenue.currency_code);
+      $('[data-metric="revenue"]').nextElementSibling.textContent =
+        getPeriodLabel(latestAnnual);
+    }
+
+    if (profit) {
+      $('[data-metric="net-profit"]').textContent =
+        formatValue(profit.value, null, profit.currency_code);
+      $('[data-metric="net-profit"]').nextElementSibling.textContent =
+        getPeriodLabel(latestAnnual);
+    }
+  }
+
+  async function init() {
+    if (!stockCode) {
+      setStatus("Company code missing");
+      $("#companyName").textContent = "Select a company";
+      $("#companySubtitle").textContent = "Return to the homepage and select a Bursa Malaysia company.";
+      $("#dataNotice").innerHTML = "<strong>Notice:</strong> No stock code was supplied in the page URL.";
+      $("#annualFinancialRows").innerHTML = '<tr><td colspan="5">No company selected.</td></tr>';
+      $("#quarterlyFinancialRows").innerHTML = '<tr><td colspan="5">No company selected.</td></tr>';
+      $("#ratioRows").innerHTML = '<tr><td colspan="3">No company selected.</td></tr>';
+      $("#valuationRows").innerHTML = '<tr><td colspan="2">No company selected.</td></tr>';
+      $("#documentList").innerHTML = "<p>No company selected.</p>";
+      return;
+    }
+
+    try {
+      setStatus("Loading company");
+
+      const companies = await getRows(
+        "companies",
+        `select=id,stock_code,name,market,sector,industry,website_url&stock_code=eq.${encodeURIComponent(stockCode)}&is_active=eq.true&limit=1`
+      );
+
+      if (!companies.length) {
+        throw new Error(`No active company found for stock code ${stockCode}.`);
+      }
+
+      const company = companies[0];
+      setProfile(company);
+      setStatus("Loading published data");
+
+      const companyId = encodeURIComponent(company.id);
+
+      const [periods, statements, ratios, reports] = await Promise.all([
+        getRows("financial_periods",
+          `select=id,company_id,period_type,fiscal_year,quarter_number,period_code,period_start,period_end,is_published&company_id=eq.${companyId}&is_published=eq.true&order=period_end.desc`),
+        getRows("financial_statements",
+          `select=period_id,statement_type,metric_code,metric_name,value,currency_code,data_status&company_id=eq.${companyId}&data_status=eq.PUBLISHED&order=metric_name.asc`),
+        getRows("financial_ratios",
+          `select=period_id,ratio_code,ratio_name,ratio_value,unit,calculation_status&company_id=eq.${companyId}&calculation_status=eq.PUBLISHED`),
+        getRows("financial_reports",
+          `select=report_type,fiscal_year,publication_date,file_name,source_url,processing_status&company_id=eq.${companyId}&processing_status=eq.PUBLISHED&order=publication_date.desc`)
+      ]);
+
+      const annualPeriods = periods.filter(period => period.period_type === "ANNUAL");
+      const quarterlyPeriods = periods.filter(period => period.period_type === "QUARTERLY");
+
+      renderFinancialTable(
+        "annualFinancialRows",
+        annualPeriods,
+        statements.filter(row => {
+          const period = periods.find(p => p.id === row.period_id);
+          return period && period.period_type === "ANNUAL";
+        })
+      );
+
+      renderFinancialTable(
+        "quarterlyFinancialRows",
+        quarterlyPeriods,
+        statements.filter(row => {
+          const period = periods.find(p => p.id === row.period_id);
+          return period && period.period_type === "QUARTERLY";
+        })
+      );
+
+      renderRatios(ratios);
+      renderDocuments(reports);
+      updateHeadlineMetrics(statements, annualPeriods);
+
+      $("#dataNotice").innerHTML =
+        `<strong>Data status:</strong> Showing published records from the BLX Financial database. ` +
+        `${periods.length} published period(s), ${statements.length} published statement item(s), ` +
+        `${ratios.length} published ratio(s) and ${reports.length} published report(s). ` +
+        `Live market prices are not connected.`;
+
+      setStatus("Database connected");
+
+    } catch (error) {
+      console.error("BLX company page error:", error);
+      setStatus("Data unavailable");
+      $("#dataNotice").innerHTML =
+        `<strong>Unable to load company data:</strong> ${escapeHTML(error.message)}. ` +
+        `Check the stock code, Supabase API access and RLS policies.`;
+      $("#annualFinancialRows").innerHTML = '<tr><td colspan="5">Published financial data unavailable.</td></tr>';
+      $("#quarterlyFinancialRows").innerHTML = '<tr><td colspan="5">Published quarterly data unavailable.</td></tr>';
+      $("#ratioRows").innerHTML = '<tr><td colspan="3">Published ratios unavailable.</td></tr>';
+      $("#valuationRows").innerHTML = '<tr><td colspan="2">Published valuation data unavailable.</td></tr>';
+      $("#documentList").innerHTML = "<p>Published reports unavailable.</p>";
+    }
+  }
+
+  init();
+})();
+</script>
+
 </body>
 </html>
-
